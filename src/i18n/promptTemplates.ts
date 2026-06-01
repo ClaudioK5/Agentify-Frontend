@@ -9,7 +9,7 @@ const en: Record<PromptChipId, readonly string[]> = {
     "Create an agent that creates a daily exercise to improve my [skill], with explanations and solutions with AI (ask the AI to return a premium HTML for the email), and delivers it via Email.",
   ],
   fun: [
-    "Create an agent that makes a daily [name of the mini-game] with the answer with AI (ask the AI to return a premium HTML for the email) and delivers it via Email.",
+    "Create an agent that makes a daily [name of the mini-game] with the answer with AI (ask the AI to return a premium HTML for the email, and don't use buttons) and delivers it via Email.",
     "Create an AI agent that generates and sends me a short story every day about [topic] via Email (ask the AI to return a clear and nice HTML for the email).",
     "Create an agent that creates a daily fact about [topic] with a short explanation (ask the AI to return a clear and nice HTML for the email), and delivers it via Email.",
   ],
@@ -26,7 +26,7 @@ const ru: Record<PromptChipId, readonly string[]> = {
     "Создай агента, который ежедневно создаёт упражнение для улучшения [навыка], с объяснениями и решениями с помощью ИИ (попроси ИИ вернуть premium HTML для email), и доставляет его по Email.",
   ],
   fun: [
-    "Создай агента, который ежедневно делает [название мини-игры] с ответом с помощью ИИ (попроси ИИ вернуть premium HTML для email) и доставляет это по Email.",
+    "Создай агента, который ежедневно делает [название мини-игры] с ответом с помощью ИИ (попроси ИИ вернуть premium HTML для email и не используй кнопки) и доставляет это по Email.",
     "Создай AI-агента, который каждый день генерирует и присылает короткий рассказ на тему [тема] по Email (ask the AI to return a clear and nice HTML for the email).",
     "Создай агента, который ежедневно создаёт факт о [тема] с кратким пояснением (попроси ИИ вернуть понятный и красивый HTML для email), и доставляет это по Email.",
   ],
@@ -43,7 +43,7 @@ const it: Record<PromptChipId, readonly string[]> = {
     "Crea un agente che crea un esercizio giornaliero per migliorare [abilità], con spiegazioni e soluzioni con l'IA (chiedi all'IA di restituire un premium HTML per l'email), e lo consegna via Email.",
   ],
   fun: [
-    "Crea un agente che ogni giorno crea [nome del mini-gioco] con la risposta con l'IA (chiedi all'IA di restituire un premium HTML per l'email) e lo consegna via Email.",
+    "Crea un agente che ogni giorno crea [nome del mini-gioco] con la risposta con l'IA (chiedi all'IA di restituire un premium HTML per l'email e di non usare pulsanti) e lo consegna via Email.",
     "Crea un agente AI che genera e mi invia ogni giorno un racconto breve su [argomento] via Email (ask the AI to return a clear and nice HTML for the email).",
     "Crea un agente che crea ogni giorno un fatto su [argomento] con una breve spiegazione (chiedi all'IA di restituire un HTML chiaro e gradevole per l'email), e lo consegna via Email.",
   ],
