@@ -236,6 +236,8 @@ export function CreateAgentPage() {
           onChangeAnswer={flow.setAnswerAt}
           primaryLabel={primaryLabel}
           onPrimaryPress={flow.onConfirmPress}
+          primaryDisabled={!flow.canConfirmPress}
+          emailQuestionIndex={flow.emailQuestionIndex}
           onBack={flow.resetToForm}
         />
       ) : null}
@@ -261,3 +263,4 @@ export function CreateAgentPage() {
     </section>
   );
 }
+
