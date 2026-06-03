@@ -7,6 +7,8 @@ type Props = {
   onChangeAnswer: (index: number, text: string) => void;
   primaryLabel: string;
   onPrimaryPress: () => void;
+  primaryDisabled?: boolean;
+  emailQuestionIndex?: number;
   onBack: () => void;
 };
 
@@ -16,6 +18,8 @@ export function CreateAgentResultView({
   onChangeAnswer,
   primaryLabel,
   onPrimaryPress,
+  primaryDisabled = false,
+  emailQuestionIndex = -1,
   onBack,
 }: Props) {
   const { t } = useI18n();
@@ -60,30 +64,50 @@ export function CreateAgentResultView({
           <>
             <h3 className="create-flow-result__section">{t("createResult.questions")}</h3>
             <p className="create-flow-result__hint">{t("createResult.questionsHint")}</p>
-            {data.questions.map((q, i) => (
-              <div key={`q-${i}`} className="create-flow-result__question">
-                <label className="create-flow-result__q-label" htmlFor={`create-q-${i}`}>
-                  {q}
-                </label>
-                <textarea
-                  id={`create-q-${i}`}
-                  className="create-flow-result__q-input"
-                  value={questionAnswers[i] ?? ""}
-                  onChange={(e) => onChangeAnswer(i, e.target.value)}
-                  placeholder={t("createResult.answerPlaceholder")}
-                  rows={3}
-                />
-              </div>
-            ))}
+            {data.questions.map((q, i) => {
+              const isEmailQuestion = i === emailQuestionIndex;
+              return (
+                <div key={`q-${i}`} className="create-flow-result__question">
+                  <label className="create-flow-result__q-label" htmlFor={`create-q-${i}`}>
+                    {q}
+                    {isEmailQuestion ? (
+                      <span className="create-flow-result__required" aria-hidden>
+                        {" "}
+                        *
+                      </span>
+                    ) : null}
+                  </label>
+                  <textarea
+                    id={`create-q-${i}`}
+                    className="create-flow-result__q-input"
+                    value={questionAnswers[i] ?? ""}
+                    onChange={(e) => onChangeAnswer(i, e.target.value)}
+                    placeholder={t("createResult.answerPlaceholder")}
+                    rows={3}
+                    required={isEmailQuestion}
+                    aria-required={isEmailQuestion}
+                    inputMode={isEmailQuestion ? "email" : undefined}
+                    autoComplete={isEmailQuestion ? "email" : undefined}
+                  />
+                </div>
+              );
+            })}
           </>
         ) : null}
       </div>
 
       <footer className="create-flow-result__footer">
-        <button type="button" className="btn btn--primary" onClick={onPrimaryPress}>
+        <button
+          type="button"
+          className="btn btn--primary"
+          onClick={onPrimaryPress}
+          disabled={primaryDisabled}
+          aria-disabled={primaryDisabled}
+        >
           {primaryLabel}
         </button>
       </footer>
     </div>
   );
 }
+
