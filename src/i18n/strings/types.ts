@@ -34,6 +34,7 @@ export type AppStringKey =
   | "create.createAgent"
   | "create.creating"
   | "create.emailQuestion"
+  | "create.emailRequired"
   | "create.errorConfirmFailed"
   | "create.errorDuplicateWaitTimeout"
   | "create.errorNotJson"
