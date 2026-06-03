@@ -36,6 +36,7 @@ export const en: StringPack = {
   "create.createAgent": "Create Agent",
   "create.creating": "Creating…",
   "create.emailQuestion": "What email should we use to send your AI agent updates and results?",
+  "create.emailRequired": "Enter your email before continuing.",
   "create.errorConfirmFailed": "Confirmation was not successful",
   "create.errorDuplicateWaitTimeout": "Your agent is still being processed, but the wait limit was reached. Try again in a moment.",
   "create.errorNotJson": "Server did not return JSON. Check your n8n Respond to Webhook node.",
