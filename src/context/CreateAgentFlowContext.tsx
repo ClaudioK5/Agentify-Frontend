@@ -12,6 +12,7 @@ import { useAuth } from "../auth/AuthProvider";
 import { readPersistedUserSession } from "../auth/persistedSessionRead";
 import { useI18n } from "../i18n/I18nProvider";
 import { useSubscription } from "../subscription/useSubscription";
+import { useToast } from "./ToastContext";
 import { postConfirmAgentWebhook } from "../services/confirmAgentWebhook";
 import { postCreateAgentWebhook } from "../services/createAgentWebhook";
 import {
@@ -38,6 +39,8 @@ type CreateAgentFlowContextValue = {
   resetToForm: () => void;
   onCreatePress: () => void;
   onConfirmPress: () => void;
+  canConfirmPress: boolean;
+  emailQuestionIndex: number;
   onRetry: () => void;
   setAnswerAt: (index: number, text: string) => void;
   hideLayoutChrome: boolean;
@@ -51,6 +54,7 @@ const CreateAgentFlowContext = createContext<CreateAgentFlowContextValue | null>
 export function CreateAgentFlowProvider({ children }: { children: ReactNode }) {
   const { requireAuth } = useAuth();
   const { t } = useI18n();
+  const { showToast } = useToast();
   const { isWorkflowBlocked } = useSubscription();
   const fixedEmailQuestion = t("create.emailQuestion");
 
@@ -185,10 +189,28 @@ export function CreateAgentFlowProvider({ children }: { children: ReactNode }) {
     }
   }, [t, animateToResult, isWorkflowBlocked]);
 
+  const emailQuestionIndex = useMemo(() => {
+    const questions = resultData?.questions ?? [];
+    return questions.findIndex((q) => q === fixedEmailQuestion);
+  }, [resultData, fixedEmailQuestion]);
+
+  const canConfirmPress = useMemo(() => {
+    if (emailQuestionIndex < 0) return true;
+    return (questionAnswers[emailQuestionIndex] ?? "").trim().length > 0;
+  }, [emailQuestionIndex, questionAnswers]);
+
   const runConfirmAgent = useCallback(async () => {
     if (isWorkflowBlocked) return;
     const data = resultDataRef.current;
     if (!data) return;
+
+    const emailIndex = data.questions.findIndex((q) => q === fixedEmailQuestion);
+    const user_email =
+      emailIndex >= 0 ? (questionAnswersRef.current[emailIndex] ?? "").trim() : "";
+    if (emailIndex >= 0 && !user_email) {
+      showToast(t("create.emailRequired"), "error");
+      return;
+    }
 
     stopConfirmPolling();
 
@@ -257,9 +279,6 @@ export function CreateAgentFlowProvider({ children }: { children: ReactNode }) {
       const answers = questionAnswersRef.current;
       const persisted = readPersistedUserSession();
       const userId = persisted?.user?.id ?? persisted?.user?.email ?? "";
-      const emailIndex = data.questions.findIndex((q) => q === fixedEmailQuestion);
-      const user_email =
-        emailIndex >= 0 ? (answers[emailIndex] ?? "").trim() : "";
       const questionsForCorrection =
         emailIndex >= 0
           ? data.questions.filter((_, i) => i !== emailIndex)
@@ -309,15 +328,19 @@ export function CreateAgentFlowProvider({ children }: { children: ReactNode }) {
       }
       finishConfirmError();
     }
-  }, [fixedEmailQuestion, isWorkflowBlocked, stopConfirmPolling]);
+  }, [fixedEmailQuestion, isWorkflowBlocked, stopConfirmPolling, showToast, t]);
 
   const onCreatePress = useCallback(() => {
     void requireAuth(runCreateAgent);
   }, [requireAuth, runCreateAgent]);
 
   const onConfirmPress = useCallback(() => {
+    if (!canConfirmPress) {
+      showToast(t("create.emailRequired"), "error");
+      return;
+    }
     void requireAuth(runConfirmAgent);
-  }, [requireAuth, runConfirmAgent]);
+  }, [requireAuth, runConfirmAgent, canConfirmPress, showToast, t]);
 
   const onRetry = useCallback(() => {
     void requireAuth(errorSource === "confirm" ? runConfirmAgent : runCreateAgent);
@@ -347,6 +370,8 @@ export function CreateAgentFlowProvider({ children }: { children: ReactNode }) {
       resetToForm,
       onCreatePress,
       onConfirmPress,
+      canConfirmPress,
+      emailQuestionIndex,
       onRetry,
       setAnswerAt,
       hideLayoutChrome,
@@ -362,6 +387,8 @@ export function CreateAgentFlowProvider({ children }: { children: ReactNode }) {
       resetToForm,
       onCreatePress,
       onConfirmPress,
+      canConfirmPress,
+      emailQuestionIndex,
       onRetry,
       setAnswerAt,
       hideLayoutChrome,
@@ -383,3 +410,4 @@ export function useCreateAgentFlowContext(): CreateAgentFlowContextValue {
   }
   return ctx;
 }
+
