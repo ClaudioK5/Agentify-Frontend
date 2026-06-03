@@ -36,6 +36,7 @@ export const ru: StringPack = {
   "create.createAgent": "Создать агента",
   "create.creating": "Создание…",
   "create.emailQuestion": "На какой email отправлять обновления и результаты вашего AI-агента?",
+  "create.emailRequired": "Укажите email, прежде чем продолжить.",
   "create.errorConfirmFailed": "Подтверждение не удалось",
   "create.errorDuplicateWaitTimeout": "Агент всё ещё обрабатывается, но истек лимит ожидания. Попробуйте чуть позже.",
   "create.errorNotJson": "Сервер не вернул JSON. Проверьте узел Respond to Webhook в n8n.",
